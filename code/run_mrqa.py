@@ -22,8 +22,6 @@ from pytorch_pretrained_bert.modeling import BertForQuestionAnswering
 from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
 from pytorch_pretrained_bert.tokenization import BasicTokenizer, BertTokenizer
 from mrqa_official_eval import exact_match_score, f1_score, metric_max_over_ground_truths
-from current_models import CURRENT_MODELS
-
 
 PRED_FILE = "predictions.json"
 EVAL_FILE = "eval_results.txt"
@@ -673,7 +671,7 @@ def main(args):
     logger.info(args)
 
     tokenizer = BertTokenizer.from_pretrained(
-        args.bert_model, do_lower_case=args.do_lower_case)
+        args.model, do_lower_case=args.do_lower_case)
 
     if args.do_train or (not args.eval_test):
         with gzip.GzipFile(args.dev_file, 'r') as reader:
@@ -738,12 +736,8 @@ def main(args):
         best_result = None
         lrs = [args.learning_rate] if args.learning_rate else [1e-6, 2e-6, 3e-6, 5e-6, 1e-5, 2e-5, 3e-5, 5e-5]
         for lr in lrs:
-            if args.pretrained_model:
-                pretrained_model = torch.load(args.pretrained_model)
-                model = BertForQuestionAnswering.from_pretrained(args.bert_model, state_dict=pretrained_model['model'])
-            else:
-                model = BertForQuestionAnswering.from_pretrained(
-                    args.bert_model, cache_dir=PYTORCH_PRETRAINED_BERT_CACHE)
+            model = BertForQuestionAnswering.from_pretrained(
+                args.model, cache_dir=PYTORCH_PRETRAINED_BERT_CACHE)
             if args.fp16:
                 model.half()
             model.to(device)
@@ -908,6 +902,7 @@ if __name__ == "__main__":
         parser.add_argument("--do_train", action='store_true', help="Whether to run training.")
         parser.add_argument("--train_mode", type=str, default='random_sorted', choices=['random', 'sorted', 'random_sorted'])
         parser.add_argument("--do_eval", action='store_true', help="Whether to run eval on the dev set.")
+        parser.add_argument("--do_lower_case", action='store_true', help="Set this flag if you are using an uncased model.")
         parser.add_argument("--eval_test", action="store_true", help="Whether to evaluate on final test set.")
         parser.add_argument("--train_batch_size", default=32, type=int, help="Total batch size for training.")
         parser.add_argument("--eval_batch_size", default=8, type=int, help="Total batch size for predictions.")
@@ -942,15 +937,4 @@ if __name__ == "__main__":
                                  "Positive power of 2: static loss scaling value.\n")
         args = parser.parse_args()
 
-        if args.model not in CURRENT_MODELS:
-            raise ValueError("model %s: not supported" % args.model)
-
-        args.bert_model = CURRENT_MODELS[args.model][0]
-        args.pretrained_model = CURRENT_MODELS[args.model][1]
-        args.do_lower_case = 'uncased' in args.bert_model
-
-        if args.pretrained_model is None:
-            assert 'google' in args.model
-        else:
-            assert os.path.isfile(args.pretrained_model)
         main(args)

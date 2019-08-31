@@ -31,8 +31,8 @@ PRETRAINED_VOCAB_ARCHIVE_MAP = {
     'bert-large-uncased': "https://s3.amazonaws.com/models.huggingface.co/bert/bert-large-uncased-vocab.txt",
     'bert-base-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt",
     'bert-large-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/bert-large-cased-vocab.txt",
-    'spanbert-base-cased': "https://dl.fbaipublicfiles.com/fairseq/models/spanbert_hf_base.tar.gz",
-    'spanbert-large-cased': "https://dl.fbaipublicfiles.com/fairseq/models/spanbert_hf.tar.gz"
+    'spanbert-base-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-cased-vocab.txt",
+    'spanbert-large-cased': "https://s3.amazonaws.com/models.huggingface.co/bert/bert-large-cased-vocab.txt"
 }
 
 PRETRAINED_VOCAB_POSITIONAL_EMBEDDINGS_SIZE_MAP = {

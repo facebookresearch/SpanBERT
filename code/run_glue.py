@@ -23,7 +23,6 @@ from pytorch_pretrained_bert.modeling import BertForSequenceClassification
 from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
 
-from current_models import CURRENT_MODELS
 
 PRED_FILE = "predictions.tsv"
 EVAL_FILE = "eval_results.txt"
@@ -721,7 +720,7 @@ def main(args):
     num_labels = len(label_list)
     eval_metric = EVAL_METRICS[task_name]
 
-    tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=args.do_lower_case)
+    tokenizer = BertTokenizer.from_pretrained(args.model, do_lower_case=args.do_lower_case)
 
     if args.do_train or (not args.eval_test):
         if task_name == "mnli":
@@ -785,15 +784,10 @@ def main(args):
         lrs = [args.learning_rate] if args.learning_rate else \
             [1e-6, 2e-6, 3e-6, 5e-6, 1e-5, 2e-5, 3e-5, 5e-5]
         for lr in lrs:
-            if args.pretrained_model:
-                pretrained_model = torch.load(args.pretrained_model)
-                model = BertForSequenceClassification.from_pretrained(
-                    args.bert_model, state_dict=pretrained_model['model'], num_labels=num_labels)
-            else:
-                cache_dir = args.cache_dir if args.cache_dir else \
-                    PYTORCH_PRETRAINED_BERT_CACHE
-                model = BertForSequenceClassification.from_pretrained(
-                    args.bert_model, cache_dir=cache_dir, num_labels=num_labels)
+            cache_dir = args.cache_dir if args.cache_dir else \
+                PYTORCH_PRETRAINED_BERT_CACHE
+            model = BertForSequenceClassification.from_pretrained(
+                args.model, cache_dir=cache_dir, num_labels=num_labels)
             if args.fp16:
                 model.half()
             model.to(device)
@@ -978,6 +972,7 @@ if __name__ == "__main__":
     parser.add_argument("--do_train", action='store_true', help="Whether to run training.")
     parser.add_argument("--train_mode", type=str, default='random_sorted', choices=['random', 'sorted', 'random_sorted'])
     parser.add_argument("--do_eval", action='store_true', help="Whether to run eval on the dev set.")
+    parser.add_argument("--do_lower_case", action='store_true', help="Set this flag if you are using an uncased model.")
     parser.add_argument("--eval_test", action='store_true', help="Whether to eval on the test set.")
     parser.add_argument("--eval_set", type=str, default=None, help="Whether to evalu on the test set.")
     parser.add_argument("--train_batch_size", default=32, type=int, help="Total batch size for training.")
@@ -1002,21 +997,5 @@ if __name__ == "__main__":
                              "0 (default value): dynamic loss scaling.\n"
                              "Positive power of 2: static loss scaling value.\n")
     args = parser.parse_args()
-
-    if args.model not in CURRENT_MODELS:
-        raise ValueError("model %s: not supported" % args.model)
-
-    args.bert_model = CURRENT_MODELS[args.model][0]
-    args.pretrained_model = CURRENT_MODELS[args.model][1]
-    args.do_lower_case = 'uncased' in args.bert_model
-
-    if args.pretrained_model is None:
-        assert 'google' in args.model
-    else:
-        assert os.path.isfile(args.pretrained_model)
-
-    if args.task_name == 'STS-B':
-        args.fp16 = False
-        logger.info("warning: use args.fp16 = False for task STS-B")
 
     main(args)

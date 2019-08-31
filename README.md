@@ -47,7 +47,7 @@ python code/run_squad.py \
   --train_batch_size 32 \
   --eval_batch_size 32  \
   --learning_rate 2e-5 \
-  --num_train_epochs 4.0 \
+  --num_train_epochs 4 \
   --max_seq_length 512 \
   --doc_stride 128 \
   --eval_metric f1 \
@@ -57,13 +57,83 @@ python code/run_squad.py \
 
 ### SQuAD 2.0
 
-### Coref
+```bash
+python code/run_squad.py \
+  --do_train \
+  --do_eval \
+  --model spanbert-base-cased \
+  --train_file train-v2.0.json \
+  --dev_file dev-v2.0.json \
+  --train_batch_size 32 \
+  --eval_batch_size 32  \
+  --learning_rate 2e-5 \
+  --num_train_epochs 4 \
+  --max_seq_length 512 \
+  --doc_stride 128 \
+  --eval_metric best_f1 \
+  --output_dir squad2_output \
+  --version_2_with_negative \
+  --fp16
+```
 
 ### TACRED
 
+```bash
+python code/run_tacred.py \
+  --do_train \
+  --do_eval \
+  --data_dir <TACRED_DATA_DIR> \
+  --model spanbert-base-cased \
+  --train_batch_size 32 \
+  --eval_batch_size 32 \
+  --learning_rate 2e-5 \
+  --num_train_epochs 10 \
+  --max_seq_length 128 \
+  --output_dir tacred_dir \
+  --fp16
+```
+
 ### MRQA (NewsQA, TriviaQA, SearchQA, HotpotQA, NaturalQuestions)
 
+```bash
+python code/run_mrqa.py \
+  --do_train \
+  --do_eval \
+  --model spanbert-base-cased \
+  --train_file TriviaQA-train.jsonl.gz \
+  --dev_file TriviaQA-dev.jsonl.gz \
+  --train_batch_size 32 \
+  --eval_batch_size 32 \
+  --learning_rate 2e-5 \
+  --num_train_epochs 4 \
+  --max_seq_length 512 \
+  --doc_stride 128 \
+  --eval_per_epoch 5 \
+  --output_dir triviaqa_dir \
+  --fp16
+```
+
 ### GLUE
+
+```bash
+python code/run_glue.py \
+   --task_name RTE \
+   --model spanbert-base-cased \
+   --do_train \
+   --do_eval \
+   --data_dir <RTE_DATA_DIR> \
+   --train_batch_size 32 \
+   --eval_batch_size 32 \
+   --num_train_epochs 10  \
+   --max_seq_length 128 \
+   --learning_rate 2e-5 \
+   --output_dir RTE_DIR \
+   --fp16
+```
+
+### Coref
+Our coref fine-tuning code is implemented in Tensorflow.
+Please see [https://github.com/mandarjoshi90/coref](https://github.com/mandarjoshi90/coref) for more details.
 
 ## Available models (QA, Coreference, Relation Extraction)
 

@@ -612,7 +612,7 @@ class BertPreTrainedModel(nn.Module):
         old_keys = []
         new_keys = []
         for key in state_dict.keys():
-            # new_key = key[8:] if key.startswith("decoder.") else key
+            new_key = key[8:] if key.startswith("decoder.") else key
             if 'gamma' in new_key:
                 new_key = new_key.replace('gamma', 'weight')
             if 'beta' in new_key:

@@ -2,6 +2,8 @@
 This repository contains code and models for the paper: [SpanBERT: Improving Pre-training by Representing and Predicting Spans](https://arxiv.org/abs/1907.10529).
 
 ## Requirements
+## Apex
+Please use an earlier commit of Apex - (NVIDIA/apex@4a8c4ac)[https://github.com/NVIDIA/apex/commit/4a8c4ac088b6f84a10569ee89db3a938b48922b4]
 
 ## Pre-trained Models
 We release both base and large *cased* models for SpanBERT. The base & large models have the same model configuration as [BERT](https://github.com/google-research/bert) but they differ in

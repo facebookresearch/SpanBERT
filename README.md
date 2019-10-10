@@ -139,7 +139,7 @@ Our coreference resolution fine-tuning code is implemented in Tensorflow. Please
 If you are interested in using our fine-tuned models for downstream tasks, directly, please use the following script.
 
 ```
-./download_finetuned.sh <model_dir> <task>
+./code/download_finetuned.sh <model_dir> <task>
 ```
 where `<task>` is one of `[squad1, squad2, tacred]`. You can evaluate the models by setting `--do_train` to `false`, `--do_eval` to `true`, and `--output_dir` to `<model_dir>/<task>` in `python code/run_<task>.py`.
 

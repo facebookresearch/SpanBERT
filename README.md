@@ -2,6 +2,8 @@
 This repository contains code and models for the paper: [SpanBERT: Improving Pre-training by Representing and Predicting Spans](https://arxiv.org/abs/1907.10529).
 
 ## Requirements
+## Apex
+Please use an earlier commit of Apex - [NVIDIA/apex@4a8c4ac](https://github.com/NVIDIA/apex/commit/4a8c4ac088b6f84a10569ee89db3a938b48922b4)
 
 ## Pre-trained Models
 We release both base and large *cased* models for SpanBERT. The base & large models have the same model configuration as [BERT](https://github.com/google-research/bert) but they differ in
@@ -131,13 +133,19 @@ python code/run_glue.py \
    --fp16
 ```
 
-### Coref
-Our coref fine-tuning code is implemented in Tensorflow.
-Please see [https://github.com/mandarjoshi90/coref](https://github.com/mandarjoshi90/coref) for more details.
+### Coreference Resolution
+Our coreference resolution fine-tuning code is implemented in Tensorflow. Please see [https://github.com/mandarjoshi90/coref](https://github.com/mandarjoshi90/coref) for more details.
 
-## Available models (QA, Coreference, Relation Extraction)
+## Finetuned Models (SQuAD 1.1/2.0, Relation Extraction, Coreference Resolution)
 
-If you are interested in using our fine-tuned models for downstream tasks (QA, coreference, relation extraction) directly, we also provide the following models:
+If you are interested in using our fine-tuned models for downstream tasks, directly, please use the following script.
+
+```
+./code/download_finetuned.sh <model_dir> <task>
+```
+where `<task>` is one of `[squad1, squad2, tacred]`. You can evaluate the models by setting `--do_train` to `false`, `--do_eval` to `true`, and `--output_dir` to `<model_dir>/<task>` in `python code/run_<task>.py`.
+
+For coreference resolution, please refer to this repository -- [https://github.com/mandarjoshi90/coref](https://github.com/mandarjoshi90/coref)
 
 
 

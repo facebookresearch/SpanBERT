@@ -1,0 +1,16 @@
+#!/bin/sh
+#SBATCH --job-name=no_nsp_random
+#SBATCH --output=/checkpoint/omerlevy/fix_models/no_nsp_random/stdout-%j.out
+#SBATCH --error=/checkpoint/omerlevy/fix_models/no_nsp_random/stderr-%j.out
+#SBATCH --mail-user=omerlevy@fb.com
+#SBATCH --mail-type=all
+#SBATCH --partition=learnfair
+#SBATCH --constraint=bldg1
+#SBATCH --signal=USR1@120
+#SBATCH --gres=gpu:8
+#SBATCH --mem=500000
+#SBATCH --time=4000
+#SBATCH --nodes=4
+#SBATCH --cpus-per-task=8
+#SBATCH --ntasks-per-node=8
+srun sh fix_slurm/no_nsp_random.sh

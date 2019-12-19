@@ -1,0 +1,17 @@
+#!/bin/sh
+#SBATCH --job-name=base_pair_external_simple
+#SBATCH --output=fast_models/base_pair_external_simple/stdout-%j.out
+#SBATCH --error=fast_models/base_pair_external_simple/stderr-%j.out
+#SBATCH --mail-user=omerlevy@fb.com
+#SBATCH --mail-type=all
+#SBATCH --partition=priority
+#SBATCH --comment=end_of_internship_2019_06_28
+#SBATCH --constraint=bldg1
+#SBATCH --signal=USR1@120
+#SBATCH --gres=gpu:8
+#SBATCH --mem=500000
+#SBATCH --time=2800
+#SBATCH --nodes=32
+#SBATCH --cpus-per-task=8
+#SBATCH --ntasks-per-node=8
+srun sh fast_slurm/base_pair_external_simple.sh

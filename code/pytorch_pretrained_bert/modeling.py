@@ -548,7 +548,7 @@ class BertPreTrainedModel(nn.Module):
                     . `pytorch_model.bin` a PyTorch dump of a BertForPreTraining instance
                 - a path or url to a pretrained model archive containing:
                     . `bert_config.json` a configuration file for the model
-                    . `model.chkpt` a TensorFlow checkpoint
+                    . `model.ckpt` a TensorFlow checkpoint
             from_tf: should we load the weights from a locally saved TensorFlow checkpoint
             cache_dir: an optional path to a folder in which the pre-trained models will be cached.
             state_dict: an optional state dictionnary (collections.OrderedDict object) to use instead of Google pre-trained models

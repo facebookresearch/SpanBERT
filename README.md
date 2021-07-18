@@ -1,5 +1,5 @@
 # SpanBERT
-This repository contains code and models for the paper: [SpanBERT: Improving Pre-training by Representing and Predicting Spans](https://arxiv.org/abs/1907.10529).
+This repository contains code and models for the paper: [SpanBERT: Improving Pre-training by Representing and Predicting Spans](https://arxiv.org/abs/1907.10529). If you prefer to use Huggingface, please check out this link -- https://huggingface.co/SpanBERT 
 
 ## Requirements
 ## Apex

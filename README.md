@@ -12,7 +12,7 @@ both the masking scheme and the training objectives (see our paper for more deta
 * [SpanBERT (base & cased)](https://dl.fbaipublicfiles.com/fairseq/models/spanbert_hf_base.tar.gz): 12-layer, 768-hidden, 12-heads , 110M parameters
 * [SpanBERT (large & cased)](https://dl.fbaipublicfiles.com/fairseq/models/spanbert_hf.tar.gz): 24-layer, 1024-hidden, 16-heads, 340M parameters
 
-These models have the same format as the [HuggingFace BERT models](https://github.com/huggingface/pytorch-transformers), so you can easily replace them with our SpanBET models. If you would like to use our [fine-tuning code](#fine-tuning), the model paths are already hard-coded in the code :)
+These models have the same format as the [HuggingFace BERT models](https://github.com/huggingface/pytorch-transformers), so you can easily replace them with our SpanBERT models. If you would like to use our [fine-tuning code](#fine-tuning), the model paths are already hard-coded in the code :)
 
 
 <!-- |                   | SQuAD 1.1     | SQuAD 2.0  | Coref   | TACRED | NewsQA | TriviaQA | SearchQA | HotpotQA | NaturalQ |

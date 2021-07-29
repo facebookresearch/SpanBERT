@@ -19,6 +19,7 @@ from io import open
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, TensorDataset
+from apex import amp
 from pytorch_pretrained_bert.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WEIGHTS_NAME, CONFIG_NAME
 from pytorch_pretrained_bert.modeling import BertForQuestionAnswering
 from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
@@ -919,8 +920,8 @@ def main(args):
         for lr in lrs:
             model = BertForQuestionAnswering.from_pretrained(
                 args.model, cache_dir=PYTORCH_PRETRAINED_BERT_CACHE)
-            if args.fp16:
-                model.half()
+            
+
             model.to(device)
             if n_gpu > 1:
                 model = torch.nn.DataParallel(model)
@@ -934,26 +935,17 @@ def main(args):
                             if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
             ]
 
-            if args.fp16:
-                try:
-                    from apex.optimizers import FP16_Optimizer
-                    from apex.optimizers import FusedAdam
-                except ImportError:
-                    raise ImportError("Please install apex from https://www.github.com/nvidia/apex"
-                                      "to use distributed and fp16 training.")
-                optimizer = FusedAdam(optimizer_grouped_parameters,
-                                      lr=lr,
-                                      bias_correction=False,
-                                      max_grad_norm=1.0)
-                if args.loss_scale == 0:
-                    optimizer = FP16_Optimizer(optimizer, dynamic_loss_scale=True)
-                else:
-                    optimizer = FP16_Optimizer(optimizer, static_loss_scale=args.loss_scale)
-            else:
-                optimizer = BertAdam(optimizer_grouped_parameters,
+            optimizer = BertAdam(optimizer_grouped_parameters,
                                      lr=lr,
                                      warmup=args.warmup_proportion,
                                      t_total=num_train_optimization_steps)
+            
+            if args.fp16:
+                model, optimizer = amp.initialize(
+                    model, optimizer, opt_level="O2", 
+                    keep_batchnorm_fp32=None, loss_scale="dynamic"
+                    )
+
             tr_loss = 0
             nb_tr_examples = 0
             nb_tr_steps = 0
@@ -977,9 +969,10 @@ def main(args):
                     tr_loss += loss.item()
                     nb_tr_examples += input_ids.size(0)
                     nb_tr_steps += 1
-
                     if args.fp16:
-                        optimizer.backward(loss)
+                        with amp.scale_loss(loss, optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                            loss = scaled_loss
                     else:
                         loss.backward()
                     if (step + 1) % args.gradient_accumulation_steps == 0:
@@ -1051,8 +1044,7 @@ def main(args):
             eval_data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids, all_example_index)
             eval_dataloader = DataLoader(eval_data, batch_size=args.eval_batch_size)
         model = BertForQuestionAnswering.from_pretrained(args.output_dir)
-        if args.fp16:
-            model.half()
+
         model.to(device)
 
         na_prob_thresh = 1.0

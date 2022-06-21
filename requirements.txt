@@ -12,7 +12,7 @@ ipython==7.10.2
 ipython-genutils==0.2.0
 jedi==0.15.1
 jmespath==0.9.4
-numpy==1.17.2
+numpy==1.22.0
 parso==0.5.2
 pexpect==4.7.0
 pickleshare==0.7.5

@@ -19,7 +19,7 @@ pickleshare==0.7.5
 Pillow==6.1.0
 prompt-toolkit==3.0.2
 ptyprocess==0.6.0
-Pygments==2.5.2
+Pygments==2.15.0
 python-dateutil==2.8.0
 pytorch-pretrained-bert==0.6.2
 regex==2019.12.9
